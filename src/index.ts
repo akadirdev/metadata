@@ -1,19 +1,17 @@
-import { Dormi } from "./sql/client";
+import { Person } from "./models/person.model";
 
-const main = async (): Promise<void> => {
-  const ds = new Dormi.Dorm<Dormi.PgDriver>({
-    user: "postgres",
-    host: "localhost",
-    database: "speedy",
-    password: "12345",
-    port: 5432,
-    connector: "pg",
-    pooling: true,
-  });
+console.log(Reflect.getMetadata("meta:model", Person));
+console.log(Reflect.getMetadata("meta:property", Person));
+console.log(Reflect.getMetadataKeys(Person));
 
-  await ds.connect();
+const p = new Person({ name: "akadirdev" });
 
-  await ds.disconnect();
-};
+function getObjectDef(target: Object) {
+  const modelName = Reflect.getMetadata("meta:model", target);
+  const propDef = Reflect.getMetadata("meta:property", target);
+  return {
+    [modelName]: propDef,
+  };
+}
 
-main();
+console.log(getObjectDef(Person));
